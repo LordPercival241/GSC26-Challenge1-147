@@ -2,7 +2,7 @@
 **IEEE Computer Society 2026 Global Student Challenge**
 **Team 147** - Dante Aliguere Olivas Huamán & Lely Nicole Fernández Risco
 
-## 🏆 Our Approach: The "Double Track" Strategy
+##  Our Approach: The "Double Track" Strategy
 
 Welcome to our submission for Challenge 01 (Federated Learning Backdoor Attack and Defense). 
 
@@ -25,7 +25,7 @@ Inside the `src/` directory, you will find our extended implementation:
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### To test the official Kaggle Submission (Track 1)
 Make sure you have the official `challenge_starter` directory adjacent to this repository.
