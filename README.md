@@ -1,4 +1,4 @@
-# GSC26-Challenge1-147: Secure Federated Learning (QSHIELD)
+# GSC26-Challenge1-147: Secure Federated Learning
 **IEEE Computer Society 2026 Global Student Challenge**
 **Team 147** - Dante Aliguere Olivas Huamán & Lely Nicole Fernández Risco
 
