@@ -1,34 +1,28 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
-class SimpleCNN(nn.Module):
-    """
-    A simple CNN architecture for image classification tasks in Federated Learning.
-    Suitable for datasets like CIFAR-10 or custom FL security challenge data.
-    """
-    def __init__(self, num_classes=10):
-        super(SimpleCNN, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.dropout1 = nn.Dropout2d(0.25)
-        
-        # Depending on input size, this linear layer size will change.
-        # Assuming 32x32 images (like CIFAR-10): after 2 pools, size is 8x8.
-        self.fc1 = nn.Linear(64 * 8 * 8, 512)
-        self.dropout2 = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(512, num_classes)
+class SmallCNN(nn.Module):
+    """Official four-class SmallCNN architecture for GSC 2026."""
+
+    def __init__(self, num_classes: int = 4):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d((1, 1)),
+        )
+        self.classifier = nn.Linear(128, num_classes)
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = self.dropout1(x)
+        x = self.features(x)
         x = torch.flatten(x, 1)
-        x = F.relu(self.fc1(x))
-        x = self.dropout2(x)
-        x = self.fc2(x)
-        return x
+        return self.classifier(x)
 
 def train(model, trainloader, criterion, optimizer, epochs=1, device="cpu"):
     """Train the model on the training set."""
@@ -56,5 +50,5 @@ def test(model, testloader, criterion, device="cpu"):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-    accuracy = correct / total
+    accuracy = correct / total if total > 0 else 0
     return loss, accuracy

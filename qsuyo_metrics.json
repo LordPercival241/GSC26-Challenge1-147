@@ -1,0 +1,29 @@
+[
+    {
+        "timestamp": 1784861418.226611,
+        "round": 1,
+        "total_clients": 2,
+        "verified_clients": 1,
+        "rejected_clients": 1,
+        "aggregated_model_norm": 8.764045715332031,
+        "cumulative_malicious_blocked": 1
+    },
+    {
+        "timestamp": 1784861418.857918,
+        "round": 2,
+        "total_clients": 2,
+        "verified_clients": 1,
+        "rejected_clients": 1,
+        "aggregated_model_norm": 8.76221752166748,
+        "cumulative_malicious_blocked": 2
+    },
+    {
+        "timestamp": 1784861419.5161188,
+        "round": 3,
+        "total_clients": 2,
+        "verified_clients": 1,
+        "rejected_clients": 1,
+        "aggregated_model_norm": 8.761797904968262,
+        "cumulative_malicious_blocked": 3
+    }
+]

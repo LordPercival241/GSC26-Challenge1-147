@@ -1,0 +1,83 @@
+# ======================================================================
+# Q-Suyo-Brain Framework — Docker Compose
+# ======================================================================
+# Services:
+#   fl-server:         PQC-enabled Flower aggregation server (Track 2)
+#   fl-client-benign:  Honest FL client with ML-DSA signing
+#   fl-client-mal:     Malicious FL client (sends corrupted signature)
+#   attack-gen:        ALIE malicious model generator (Track 1)
+#   defense-test:      Local defense validation (Track 1)
+# ======================================================================
+
+services:
+  # ── Track 2: Quantum-Secure FL Simulation ──────────────────────────
+  fl-server:
+    build: .
+    container_name: qsuyo-server
+    command: python src/server.py
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./qsuyo_metrics.json:/app/qsuyo_metrics.json
+    networks:
+      - fl-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import socket; s=socket.socket(); s.connect((\"127.0.0.1\",8080)); s.close()'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  fl-client-benign:
+    build: .
+    container_name: qsuyo-client-benign
+    command: python src/client.py
+    depends_on:
+      fl-server:
+        condition: service_healthy
+    environment:
+      - FL_SERVER_ADDRESS=fl-server:8080
+    networks:
+      - fl-net
+
+  fl-client-mal:
+    build: .
+    container_name: qsuyo-client-malicious
+    command: python src/client.py --malicious
+    depends_on:
+      fl-server:
+        condition: service_healthy
+    environment:
+      - FL_SERVER_ADDRESS=fl-server:8080
+    networks:
+      - fl-net
+
+  # ── Track 1: Algorithmic Evaluation ────────────────────────────────
+  attack-gen:
+    build: .
+    container_name: qsuyo-attack-gen
+    # WORKDIR is /app, so Path("../challenge_starter") resolves to /challenge_starter.
+    # Mount the official starter there explicitly (read-only) to avoid the
+    # ambiguous "/app/../challenge_starter" target.
+    command: python attack_generator.py
+    volumes:
+      - ./participant_models:/app/participant_models
+      - ../challenge_starter:/challenge_starter:ro
+    profiles:
+      - track1
+
+  defense-test:
+    build: .
+    container_name: qsuyo-defense-test
+    command: >
+      python /challenge_starter/defense/test_defense_submission.py
+        --submission defense_submission.py
+        --visible-case-dir /challenge_starter/defense/visible_case
+    volumes:
+      - ../challenge_starter:/challenge_starter:ro
+    profiles:
+      - track1
+
+networks:
+  fl-net:
+    driver: bridge

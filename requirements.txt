@@ -1,8 +1,17 @@
-flwr>=1.8.0
-torch>=2.0.0
-torchvision>=0.15.0
-numpy>=1.24.0
-scikit-learn>=1.2.2
-liboqs-python>=0.8.0
-hdbscan>=0.8.33
-pandas>=2.0.0
+# ======================================================================
+# GSC26 Challenge 1 — Team 147 (Q-Suyo-Brain)
+# Pinned dependencies for reproducible builds.
+#
+# Track 1 (official IEEE evaluation: attack_generator.py + defense_submission.py)
+# depends ONLY on torch + Python stdlib. The remaining packages are used
+# exclusively by the optional Track 2 (PQC / Flower) simulation in src/.
+# Removed unused deps: torchvision, scikit-learn, hdbscan, pandas.
+# ======================================================================
+
+# ── Track 1 (required for the official challenge) ──────────────────────
+torch==2.13.0
+
+# ── Track 2 (optional PQC federated-learning simulation) ───────────────
+flwr==1.32.1
+numpy==2.1.3
+liboqs-python==0.12.0
