@@ -71,20 +71,3 @@ To verify correctness, operational resilience, and strict execution isolation, a
 ```bash
 # Build and launch the full FL pipeline (server + 2 clients)
 docker compose up --build
-```
-
-### Option B: Local (without Docker)
-
-```bash
-# 1. Synthesize ALIE Malicious Models
-python attack_generator.py
-
-# 2. Package the CSV tensor payload using the official script
-python ../challenge_starter/attack/create_attack_submission.py --models-root ./participant_models --output attack_submission.csv
-
-# 3. Validate the attack submission
-python ../challenge_starter/attack/validate_attack_submission.py --submission attack_submission.csv
-
-# 4. Execute isolated local defense validation
-python ../challenge_starter/defense/test_defense_submission.py --submission defense_submission.py --visible-case-dir ../challenge_starter/defense/visible_case
-```
